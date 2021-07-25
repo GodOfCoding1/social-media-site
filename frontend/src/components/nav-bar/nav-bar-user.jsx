@@ -93,13 +93,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function NavBarUser({
-  username,
-  token,
-  userData,
-  active,
-  setLocation,
-}) {
+export default function NavBarUser({ user, active, setLocation }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -197,7 +191,23 @@ export default function NavBarUser({
             setLocation("profile");
           }}
         >
-          <AccountCircleOutlinedIcon style={{ marginRight: "6px" }} /> Profile
+          {" "}
+          {user.dp_url ? (
+            <img
+              src={user.dp_url}
+              alt="dp"
+              width="35px"
+              height="35px"
+              style={{
+                overflow: "hidden",
+                borderRadius: "50%",
+                marginRight: "6px",
+              }}
+            />
+          ) : (
+            <AccountCircleOutlinedIcon style={{ marginRight: "6px" }} />
+          )}
+          Profile
         </Button>
       </MenuItem>
       <MenuItem
@@ -275,7 +285,20 @@ export default function NavBarUser({
               onClick={handleProfileMenuOpen}
               style={{ color: "rgb(1, 158, 142)" }}
             >
-              <AccountCircleOutlinedIcon />
+              {user.dp_url ? (
+                <img
+                  src={user.dp_url}
+                  alt="dp"
+                  width="40px"
+                  height="40px"
+                  style={{
+                    overflow: "hidden",
+                    borderRadius: "50%",
+                  }}
+                />
+              ) : (
+                <AccountCircleOutlinedIcon />
+              )}
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

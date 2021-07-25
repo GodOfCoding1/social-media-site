@@ -167,7 +167,7 @@ const Register = () => {
                   required
                   fullWidth
                   name="confrim password"
-                  label="Confrim Password"
+                  label="Confirm Password"
                   type="password"
                   id="password"
                   autoComplete="current-password"

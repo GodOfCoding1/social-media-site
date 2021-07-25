@@ -14,6 +14,7 @@ var schme = new mongoose.Schema({
     verified: { type: Boolean, default: false },
     posts: [{ type: String }],
     friends: [{ type: String }],
+    friend_request: [{ type: String }],
     coins: { type: Number, default: 100 },
     shared_post: [{ type: shared_posts }],
     dp_url: { type: String, default: "" },

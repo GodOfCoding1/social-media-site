@@ -88,4 +88,40 @@ route.get("/allposts/:id", async(req, res) => {
     res.send({ message: "Some issue with the token send" });
 });
 
+route.get("/deletePost/:id", async(req, res) => {
+    const token = req.headers.token;
+    const postid = req.params.id;
+
+    if (token) {
+        const id = JWT.getUserData(token)._id;
+
+        try {
+            const user_with_post = await userDB.find({
+                _id: id,
+                posts: { $in: [postid] },
+            });
+
+            if (user_with_post) {
+                await userDB.findOneAndUpdate({
+                    _id: id,
+                }, { $pull: { posts: postid } });
+
+                const post_deleted = await postDB.findByIdAndDelete(postid);
+                if (post_deleted) {
+                    res.send({ message: "Post Deleted" });
+                }
+            } else {
+                res.send({
+                    message: `Cannot find user in database`,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            res.send({ message: "Error in Deleting" });
+        }
+    } else {
+        res.send({ message: "You are not logged in" });
+    }
+});
+
 module.exports = route;

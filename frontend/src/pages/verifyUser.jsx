@@ -68,7 +68,7 @@ const VerifyUser = ({
               <HomeIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Payment management service
+              Verification Page
             </Typography>
             <div>
               <Button

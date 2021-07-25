@@ -7,6 +7,9 @@ import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import LinearProgress from "@material-ui/core/LinearProgress";
 const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
@@ -79,8 +82,27 @@ const AddPosts = ({ token }) => {
   const [caption, setCaption] = useState("");
   const [coins, setCoins] = useState(null);
 
+  //for progress bar
+  const [showBar, setShowBar] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const options = {
+    onUploadProgress: (progressEvent) => {
+      const { loaded, total } = progressEvent;
+      let percent = Math.floor((loaded * 100) / total);
+
+      if (percent < 100) {
+        setUploadPercentage(percent);
+      }
+      if (percent >= 100) {
+        setShowBar(false);
+      }
+    },
+  };
+
   const axiosPost = async () => {
     let postData = {};
+
+    setShowBar(true);
 
     if (file) {
       postData["type"] = "image";
@@ -95,7 +117,8 @@ const AddPosts = ({ token }) => {
       try {
         response = await axios.post(
           "https://api.cloudinary.com/v1_1/hibyehibye/image/upload",
-          data
+          data,
+          options
         );
       } catch (error) {
         console.log(error);
@@ -109,8 +132,21 @@ const AddPosts = ({ token }) => {
       window.alert("Empty contents for post");
     }
     console.log("data being send to backend", postData);
+
+    setShowBar(true);
     axios
       .post(`http://localhost:5000/posts/addPost`, postData, {
+        onUploadProgress: (progressEvent) => {
+          const { loaded, total } = progressEvent;
+          let percent = Math.floor((loaded * 100) / total);
+
+          if (percent < 100) {
+            setUploadPercentage(percent);
+          }
+          if (percent >= 100) {
+            setShowBar(false);
+          }
+        },
         headers: {
           token: token,
         },
@@ -243,6 +279,16 @@ const AddPosts = ({ token }) => {
           </Typography>
         )}
       </Paper>
+      <Dialog
+        onClose={() => {
+          setShowBar(false);
+        }}
+        aria-labelledby="simple-dialog-title"
+        open={showBar}
+      >
+        <DialogTitle id="simple-dialog-title">Uploading...</DialogTitle>
+        <LinearProgress variant="determinate" value={uploadPercentage} />
+      </Dialog>
     </React.Fragment>
   );
 };

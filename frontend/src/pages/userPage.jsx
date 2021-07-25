@@ -38,15 +38,14 @@ const UserPage = () => {
     <BrowserRouter>
       <CssBaseline />
       <div style={{ height: "100vh", backgroundColor: "#f2f4f5" }}>
-        <NavBarUser
-          username={user.name}
-          token={token}
-          userData={user}
-          active={location}
-          setLocation={setLocation}
-        />{" "}
+        <NavBarUser user={user} active={location} setLocation={setLocation} />{" "}
         {location === "requests" ? (
-          <Requests />
+          <Requests
+            user={user}
+            token={token}
+            user_id={user._id}
+            viewer={user}
+          />
         ) : location === "post" ? (
           <AddPosts token={token} />
         ) : location === "profile" ? (

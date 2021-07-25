@@ -505,4 +505,167 @@ route.get("/verifyUser/:token", async(req, res) => {
     }
 });
 
+route.get("/search/:query", async(req, res) => {
+    const query = req.params.query;
+    try {
+        let result = await userDB.aggregate([{
+            $search: {
+                index: "searchForUsers1",
+                text: {
+                    query: query,
+                    path: {
+                        wildcard: "*",
+                    },
+                },
+            },
+        }, ]);
+        console.log(result);
+        res.send(result);
+    } catch (e) {
+        res.status(500).send({ message: e.message });
+    }
+});
+
+//set dp
+route.post("/uploadDP", (req, res) => {
+    const token = req.headers.token;
+    if (token) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        userDB
+            .findByIdAndUpdate(id, { dp_url: req.body.dp_url })
+            .then((data) => {
+                if (!data) {
+                    res.send({ message: "didnt find the user with id" + id });
+                } else {
+                    res.send({ message: "Profile Picture Updated" });
+                }
+            })
+            .catch((err) => {
+                res.send({ message: err + "err retrieving user with id" + id });
+            });
+    } else {
+        res.send({ status: 400, message: "no token" });
+    }
+});
+
+route.get("/single_user_with_id/:id", (req, res) => {
+    const id = req.params.id;
+    if (id) {
+        userDB
+            .findById(id)
+            .then((data) => {
+                if (!data) {
+                    res.send({ message: "didnt find the user with id" + id });
+                } else {
+                    res.send(data);
+                }
+            })
+            .catch((err) => {
+                res.send({ message: err + "err retrieving user with id" + id });
+            });
+    } else {
+        res.send({ status: 400, message: "no token" });
+    }
+});
+
+route.get("/sendRequest/:id", (req, res) => {
+    const token = req.headers.token;
+    if (token) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        const idOfReciver = req.params.id;
+        if (idOfReciver) {
+            userDB
+                .findByIdAndUpdate(idOfReciver, { $push: { friend_request: id } })
+                .then((data) => {
+                    if (!data) {
+                        res.send({ message: "didnt find the user with id" + idOfReciver });
+                    } else {
+                        res.send({ message: "Request send" });
+                    }
+                })
+                .catch((err) => {
+                    res.send({
+                        message: err + "err retrieving user with id" + idOfReciver,
+                    });
+                });
+        }
+    } else {
+        res.send({ status: 400, message: "no token" });
+    }
+});
+
+route.get("/acceptRequest/:id", (req, res) => {
+    const token = req.headers.token;
+    if (token) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        const idOfReciver = req.params.id;
+        if (idOfReciver) {
+            userDB
+                .findByIdAndUpdate(idOfReciver, { $push: { friends: id } })
+                .then((data) => {
+                    if (!data) {
+                        res.send({ message: "Didnt find the user,maybe user was deleted" });
+                        return;
+                    } else {
+                        userDB
+                            .findByIdAndUpdate(id, { $push: { friends: idOfReciver } })
+                            .then((data) => {
+                                if (!data) {
+                                    res.send({
+                                        message: "didnt find the user with id" + idOfReciver,
+                                    });
+                                } else {
+                                    res.send({ message: "Request Accepted" });
+                                }
+                            })
+                            .catch((err) => {
+                                res.send({
+                                    message: err + "err retrieving user with id" + idOfReciver,
+                                });
+                            });
+                    }
+                })
+                .catch((err) => {
+                    res.send({
+                        message: err + "err retrieving user with id" + idOfReciver,
+                    });
+                });
+        }
+    } else {
+        res.send({ status: 400, message: "no token" });
+    }
+});
+
+route.get("/rejectRequest/:id", (req, res) => {
+    const token = req.headers.token;
+    if (token) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        const idOfReciver = req.params.id;
+        if (idOfReciver) {
+            userDB
+                .findByIdAndUpdate(id, { $pull: { friend_request: idOfReciver } })
+                .then((data) => {
+                    if (!data) {
+                        res.send({
+                            message: "didnt find the user with id" + idOfReciver,
+                        });
+                    } else {
+                        res.send({ message: "Request Rejected" });
+                    }
+                })
+                .catch((err) => {
+                    res.send({
+                        message: err + "err retrieving user with id" + idOfReciver,
+                    });
+                });
+        }
+    } else {
+        res.send({ status: 400, message: "no token" });
+    }
+});
+
 module.exports = route;
