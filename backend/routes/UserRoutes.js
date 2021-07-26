@@ -109,6 +109,7 @@ route.post("/login", async(req, res) => {
         _id: user._id,
         email: user.email,
         isAdmin: user.isAdmin,
+        username: user.username,
     });
 
     try {
@@ -611,7 +612,10 @@ route.get("/acceptRequest/:id", (req, res) => {
                         return;
                     } else {
                         userDB
-                            .findByIdAndUpdate(id, { $push: { friends: idOfReciver } })
+                            .findByIdAndUpdate(id, {
+                                $push: { friends: idOfReciver },
+                                $pull: { friend_request: idOfReciver },
+                            })
                             .then((data) => {
                                 if (!data) {
                                     res.send({

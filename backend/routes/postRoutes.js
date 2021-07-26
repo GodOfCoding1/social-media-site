@@ -8,9 +8,17 @@ route.post("/addPost", async(req, res) => {
     const token = req.headers.token;
 
     if (token) {
-        const id = JWT.getUserData(token)._id;
-        console.log("inside post", {...req.body, user_id: id });
-        let post_result = new postDB({...req.body, user_id: id });
+        const poster = JWT.getUserData(token);
+        console.log("inside post", {
+            ...req.body,
+            user_id: poster._id,
+            username: poster.username,
+        });
+        let post_result = new postDB({
+            ...req.body,
+            user_id: poster._id,
+            username: poster.username,
+        });
 
         post_result
             .save()
@@ -121,6 +129,90 @@ route.get("/deletePost/:id", async(req, res) => {
         }
     } else {
         res.send({ message: "You are not logged in" });
+    }
+});
+
+route.get("/likePost/:id", async(req, res) => {
+    const token = req.headers.token;
+    const postid = req.params.id;
+
+    if (token) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        try {
+            const post_liked = await postDB.findByIdAndUpdate(postid, {
+                $inc: { likes: 1 },
+                $addToSet: { liked_by: id },
+            });
+            await userDB.findByIdAndUpdate(post_liked.user_id, {
+                $inc: { coins: 1 },
+            });
+
+            if (post_liked) {
+                res.send({ liked: post_liked.likes });
+            }
+        } catch (error) {
+            console.log(error);
+            res.send({ message: "Error in Liking" });
+        }
+    } else {
+        res.send({ message: "You are not logged in" });
+    }
+});
+
+route.get("/getFeed", async(req, res) => {
+    const token = req.headers.token;
+    if (token) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        userDB
+            .findById(id)
+            .then(async(data) => {
+                if (!data) {
+                    res.send({
+                        message: "didnt find the user with id" + idOfReciver,
+                    });
+                    return;
+                } else {
+                    let allPostsID = [];
+                    console.log("data.friends", data.friends);
+                    for (let i = 0; i < data.friends.length; i++) {
+                        try {
+                            const friendData = await userDB.findById(data.friends[i]);
+                            if (friendData)
+                                allPostsID.push(
+                                    ...JSON.parse(JSON.stringify(friendData.posts))
+                                );
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+
+                    let allPostData = [];
+                    console.log("allPostsID", allPostsID);
+                    for (let i = 0; i < allPostsID.length; i++) {
+                        try {
+                            const postData = await postDB.findById(allPostsID[i]);
+                            if (postData)
+                                allPostData.push(JSON.parse(JSON.stringify(postData)));
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                    allPostData = allPostData.sort(function(a, b) {
+                        return parseFloat(b.time) - parseFloat(a.time);
+                    });
+                    console.log("allPostData", allPostData);
+                    res.send({ feed: allPostData });
+                }
+            })
+            .catch((err) => {
+                res.send({
+                    message: err + "err retrieving user with id" + idOfReciver,
+                });
+            });
+    } else {
+        res.send({ status: 400, message: "no token" });
     }
 });
 

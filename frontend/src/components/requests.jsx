@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Requests = ({ token, user_id, viewer }) => {
+const Requests = ({ token, viewer, updateProps }) => {
   const classes = useStyles();
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -75,6 +75,7 @@ const Requests = ({ token, user_id, viewer }) => {
               key={index + "requests"}
               id={possible_friend}
               viewer={viewer}
+              updateProps={updateProps}
             />
           ))}
         </Paper>

@@ -230,7 +230,6 @@ const ProfileOwner = ({ token }) => {
           <Typography>
             <Button
               variant="contained"
-              style={{ marginTop: "20px" }}
               className={classes.activeButtons}
               component="label"
             >

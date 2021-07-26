@@ -29,12 +29,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserCard = ({ user, id, token, viewer }) => {
+const UserCard = ({ user, id, token, viewer, updateProps }) => {
   const classes = useStyles();
-  const [user_data, setUser] = useState(user);
+  const [user_data, setUser] = useState({});
 
   useEffect(() => {
-    if (id)
+    if (id) {
       axios
         .get(`http://localhost:5000/users/single_user_with_id/${id}`, {
           headers: {
@@ -48,7 +48,10 @@ const UserCard = ({ user, id, token, viewer }) => {
           window.alert("Some error occured please check console");
           console.log(err);
         });
-  }, [id, token]);
+    } else {
+      setUser(user);
+    }
+  }, [id, token, user]);
 
   const sendRequest = (id_receiver) => {
     axios
@@ -59,6 +62,7 @@ const UserCard = ({ user, id, token, viewer }) => {
       })
       .then((res) => {
         if (res.data.message) window.alert(res.data.message);
+        updateProps();
       })
       .catch((err) => {
         window.alert("Some error occured please check console");
@@ -75,6 +79,7 @@ const UserCard = ({ user, id, token, viewer }) => {
       })
       .then((res) => {
         if (res.data.message) window.alert(res.data.message);
+        updateProps();
       })
       .catch((err) => {
         window.alert("Some error occured please check console");
@@ -91,6 +96,7 @@ const UserCard = ({ user, id, token, viewer }) => {
       })
       .then((res) => {
         if (res.data.message) window.alert(res.data.message);
+        updateProps();
       })
       .catch((err) => {
         window.alert("Some error occured please check console");
@@ -158,7 +164,15 @@ const UserCard = ({ user, id, token, viewer }) => {
           </div>
         </div>
         {id ? (
-          <Typography align="center" style={{ paddingTop: "20px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              width: "100%",
+              marginTop: "20px",
+            }}
+          >
             <Button
               variant="contained"
               className={classes.activeButtons}
@@ -181,7 +195,7 @@ const UserCard = ({ user, id, token, viewer }) => {
               <ThumbDownIcon style={{ marginRight: "10px" }} />
               Reject
             </Button>
-          </Typography>
+          </div>
         ) : (
           <Typography align="center" style={{ paddingTop: "20px" }}>
             <Button

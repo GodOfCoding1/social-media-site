@@ -12,6 +12,9 @@ import { Box, Paper } from "@material-ui/core";
 import axios from "axios";
 import React, { useState } from "react";
 import { Copyright } from "../components/copyright";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const validator = require("email-validator");
 
@@ -45,6 +48,23 @@ const Register = () => {
   const [confrimPassword, setConfrimPassword] = useState("");
   const [email, setEmail] = useState("");
 
+  //for progress bar
+  const [showBar, setShowBar] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const options = {
+    onUploadProgress: (progressEvent) => {
+      const { loaded, total } = progressEvent;
+      let percent = Math.floor((loaded * 100) / total);
+
+      if (percent < 100) {
+        setUploadPercentage(percent);
+      }
+      if (percent >= 100) {
+        setShowBar(false);
+      }
+    },
+  };
+
   const postRegister = () => {
     if (
       password.length >= 6 &&
@@ -54,24 +74,27 @@ const Register = () => {
       validator.validate(email)
     ) {
       axios
-        .post(`http://localhost:5000/users/register`, {
-          name: name,
-          email: email,
-          password: password,
-          username: username,
-        })
+        .post(
+          `http://localhost:5000/users/register`,
+          {
+            name: name,
+            email: email,
+            password: password,
+            username: username,
+          },
+          options
+        )
         .then((res) => {
           window.alert("Registered sucessfully");
           window.alert(res.data.message);
-          window.location.replace(`http://${window.location.host}/login`);
+
           if (res.data.status === 400) {
             if (res.data.message) {
               window.alert(res.data.message);
               window.location.reload();
             }
           } else {
-            window.alert("Some error occured. check console.");
-            console.log(res.data);
+            window.location.replace(`http://${window.location.host}/login`);
           }
         })
         .catch((err) => {
@@ -200,6 +223,16 @@ const Register = () => {
           <Copyright />
         </Box>
       </Container>
+      <Dialog
+        onClose={() => {
+          setShowBar(false);
+        }}
+        aria-labelledby="simple-dialog-title"
+        open={showBar}
+      >
+        <DialogTitle id="simple-dialog-title">Registering...</DialogTitle>
+        <LinearProgress variant="determinate" value={uploadPercentage} />
+      </Dialog>
     </React.Fragment>
   );
 };
