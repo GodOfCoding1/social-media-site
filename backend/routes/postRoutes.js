@@ -9,11 +9,7 @@ route.post("/addPost", async(req, res) => {
 
     if (token) {
         const poster = JWT.getUserData(token);
-        console.log("inside post", {
-            ...req.body,
-            user_id: poster._id,
-            username: poster.username,
-        });
+
         let post_result = new postDB({
             ...req.body,
             user_id: poster._id,
@@ -24,7 +20,7 @@ route.post("/addPost", async(req, res) => {
             .save()
             .then((post_data) => {
                 userDB
-                    .findByIdAndUpdate(id, { $push: { posts: post_data._id } })
+                    .findByIdAndUpdate(poster._id, { $push: { posts: post_data._id } })
                     .then((data) => {
                         if (!data) {
                             res.send({
@@ -175,7 +171,6 @@ route.get("/getFeed", async(req, res) => {
                     return;
                 } else {
                     let allPostsID = [];
-                    console.log("data.friends", data.friends);
                     for (let i = 0; i < data.friends.length; i++) {
                         try {
                             const friendData = await userDB.findById(data.friends[i]);
@@ -189,7 +184,7 @@ route.get("/getFeed", async(req, res) => {
                     }
 
                     let allPostData = [];
-                    console.log("allPostsID", allPostsID);
+
                     for (let i = 0; i < allPostsID.length; i++) {
                         try {
                             const postData = await postDB.findById(allPostsID[i]);
@@ -202,7 +197,7 @@ route.get("/getFeed", async(req, res) => {
                     allPostData = allPostData.sort(function(a, b) {
                         return parseFloat(b.time) - parseFloat(a.time);
                     });
-                    console.log("allPostData", allPostData);
+
                     res.send({ feed: allPostData });
                 }
             })

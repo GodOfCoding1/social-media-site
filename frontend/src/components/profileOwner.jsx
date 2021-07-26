@@ -306,6 +306,22 @@ const ProfileOwner = ({ token }) => {
                 }}
               >
                 <Typography
+                  variant="caption"
+                  align="left"
+                  style={{ margin: 0, padding: 0, color: "#696969" }}
+                >
+                  You at{" "}
+                  {new Date(post.time).getHours() +
+                    ":" +
+                    new Date(post.time).getMinutes() +
+                    " on " +
+                    new Date(post.time).getDate() +
+                    "/" +
+                    new Date(post.time).getMonth() +
+                    "/" +
+                    new Date(post.time).getFullYear()}
+                </Typography>
+                <Typography
                   variant="body1"
                   color="textPrimary"
                   align="left"
@@ -361,6 +377,22 @@ const ProfileOwner = ({ token }) => {
                   marginBottom: 0,
                 }}
               >
+                <Typography
+                  variant="caption"
+                  align="left"
+                  style={{ margin: 0, padding: 0, color: "#696969" }}
+                >
+                  You at{" "}
+                  {new Date(post.time).getHours() +
+                    ":" +
+                    new Date(post.time).getMinutes() +
+                    " on " +
+                    new Date(post.time).getDate() +
+                    "/" +
+                    new Date(post.time).getMonth() +
+                    "/" +
+                    new Date(post.time).getFullYear()}
+                </Typography>
                 <Typography
                   variant="body1"
                   color="textPrimary"

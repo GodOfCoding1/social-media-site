@@ -105,6 +105,7 @@ route.post("/login", async(req, res) => {
         return res.send({ status: 400, message: "No such email/password" });
 
     //create and give tokenes
+
     const token = JWT.GenerateJWT({
         _id: user._id,
         email: user.email,

@@ -82,6 +82,15 @@ const AddPosts = ({ token }) => {
   const [caption, setCaption] = useState("");
   const [coins, setCoins] = useState(null);
 
+  const reset = () => {
+    setType("");
+    setFile(null);
+    setText("");
+    setImage(null);
+    setCaption("");
+    setCoins(null);
+  };
+
   //for progress bar
   const [showBar, setShowBar] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -155,6 +164,7 @@ const AddPosts = ({ token }) => {
         if (res.data.message) {
           window.alert(res.data.message);
         }
+        reset();
       })
       .catch((err) => {
         window.alert("some error occured please check console");
