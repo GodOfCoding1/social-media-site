@@ -521,7 +521,7 @@ route.get("/search/:query", async(req, res) => {
                 },
             },
         }, ]);
-        console.log(result);
+
         res.send(result);
     } catch (e) {
         res.status(500).send({ message: e.message });
