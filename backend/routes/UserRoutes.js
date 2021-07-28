@@ -152,7 +152,7 @@ route.post("/login", async(req, res) => {
 route.get("/all_users", (req, res) => {
     console.log("sending all users data");
     const token = req.headers.token;
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const requestingUser = JWT.getUserData(token);
         if (requestingUser.isAdmin) {
             userDB
@@ -183,7 +183,7 @@ route.get("/all_users", (req, res) => {
 //to get one user
 route.get("/single_user", (req, res) => {
     const token = req.headers.token;
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const requestingUser = JWT.getUserData(token);
         const id = requestingUser._id;
         userDB
@@ -379,7 +379,7 @@ route.put("/forgotPassword/:email", async(req, res) => {
 route.get("/mailResetPassword", async(req, res) => {
     const token = req.headers.token;
 
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const id = JWT.getUserData(token)._id;
 
         //finding mail that has same id as user
@@ -429,7 +429,7 @@ route.get("/mailResetPassword", async(req, res) => {
 route.put("/changePassword", async(req, res) => {
     const token = req.headers.token;
 
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const id = JWT.getUserData(token)._id;
         userDB
             .findById(id)
@@ -471,7 +471,7 @@ route.put("/changePassword", async(req, res) => {
 route.get("/verifyUser/:token", async(req, res) => {
     const token = req.params.token;
 
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const id = JWT.getUserData(token)._id;
         userDB
             .findById(id)
@@ -531,7 +531,7 @@ route.get("/search/:query", async(req, res) => {
 //set dp
 route.post("/uploadDP", (req, res) => {
     const token = req.headers.token;
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const requestingUser = JWT.getUserData(token);
         const id = requestingUser._id;
         userDB
@@ -573,7 +573,7 @@ route.get("/single_user_with_id/:id", (req, res) => {
 
 route.get("/sendRequest/:id", (req, res) => {
     const token = req.headers.token;
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const requestingUser = JWT.getUserData(token);
         const id = requestingUser._id;
         const idOfReciver = req.params.id;
@@ -600,7 +600,7 @@ route.get("/sendRequest/:id", (req, res) => {
 
 route.get("/acceptRequest/:id", (req, res) => {
     const token = req.headers.token;
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const requestingUser = JWT.getUserData(token);
         const id = requestingUser._id;
         const idOfReciver = req.params.id;
@@ -646,8 +646,9 @@ route.get("/acceptRequest/:id", (req, res) => {
 
 route.get("/rejectRequest/:id", (req, res) => {
     const token = req.headers.token;
-    if (token) {
+    if (token && JWT.getUserData(token)) {
         const requestingUser = JWT.getUserData(token);
+
         const id = requestingUser._id;
         const idOfReciver = req.params.id;
         if (idOfReciver) {
@@ -667,6 +668,82 @@ route.get("/rejectRequest/:id", (req, res) => {
                         message: err + "err retrieving user with id" + idOfReciver,
                     });
                 });
+        }
+    } else {
+        res.send({ status: 400, message: "no token" });
+    }
+});
+
+route.get("/removeFriend/:id", (req, res) => {
+    const token = req.headers.token;
+    if (token && JWT.getUserData(token)) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        const idOfReciver = req.params.id;
+        if (idOfReciver) {
+            userDB
+                .findByIdAndUpdate(idOfReciver, { $pull: { friends: id } })
+                .then((data) => {
+                    if (!data) {
+                        res.send({ message: "Didnt find the user,maybe user was deleted" });
+                        return;
+                    } else {
+                        userDB
+                            .findByIdAndUpdate(id, {
+                                $pull: { friends: idOfReciver },
+                            })
+                            .then((data) => {
+                                if (!data) {
+                                    res.send({
+                                        message: "didnt find the user with id" + idOfReciver,
+                                    });
+                                } else {
+                                    res.send({ message: "Friend Removed" });
+                                }
+                            })
+                            .catch((err) => {
+                                res.send({
+                                    message: err + "err retrieving user with id" + idOfReciver,
+                                });
+                            });
+                    }
+                })
+                .catch((err) => {
+                    res.send({
+                        message: err + "err retrieving user with id" + idOfReciver,
+                    });
+                });
+        }
+    } else {
+        res.send({ status: 400, message: "no token" });
+    }
+});
+
+route.get("/friends", async(req, res) => {
+    const token = req.headers.token;
+    if (token && JWT.getUserData(token)) {
+        const requestingUser = JWT.getUserData(token);
+        const id = requestingUser._id;
+        try {
+            const requestingUserData = await userDB.findById(id);
+            if (!requestingUserData) {
+                res.send({ message: "Didnt find the user with id" + id });
+                return;
+            }
+            if (requestingUserData.friends.length) {
+                let friendsData = [];
+                for (let i = 0; i < requestingUserData.friends.length; i++) {
+                    const friendData = await userDB.findById(
+                        requestingUserData.friends[i]
+                    );
+                    if (friendData) friendsData.push(friendData);
+                }
+                res.send({ friendsData: friendsData });
+            } else {
+                res.send({ friendsData: false });
+            }
+        } catch (error) {
+            res.send({ message: err + "err retrieving user with id" + id });
         }
     } else {
         res.send({ status: 400, message: "no token" });

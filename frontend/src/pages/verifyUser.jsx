@@ -37,7 +37,7 @@ const VerifyUser = ({
   }, []);
   const verifyuser = () => {
     axios
-      .get(`http://localhost:5000/users/verifyUser/${token}`)
+      .get(`http://${window.location.host}/users/verifyUser/${token}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {

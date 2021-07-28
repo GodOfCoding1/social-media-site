@@ -9,6 +9,7 @@ var schme = new mongoose.Schema({
     user_id: { type: String, default: "" },
     username: { type: String, default: "" },
     liked_by: [{ type: String }],
+    unlocked_by: [{ type: String }],
     coins_needed: { type: Number, default: 0 },
     coins_earned: { type: Number, default: 0 },
     time: { type: Date, default: Date.now() },

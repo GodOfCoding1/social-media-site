@@ -105,13 +105,25 @@ const About = () => {
         </Typography>
         <Typography variant="body1" color="textPrimary" align="left">
           <li>
-            Icons made by{" "}
-            <a href="https://www.freepik.com" title="Freepik">
-              Freepik
-            </a>{" "}
-            from{" "}
+            Icons from{" "}
             <a href="https://www.flaticon.com/" title="Flaticon">
               www.flaticon.com
+            </a>
+          </li>
+        </Typography>
+        <Typography variant="body1" color="textPrimary" align="left">
+          <li>
+            Icons hosted on{" "}
+            <a href="https://imgbb.com/" title="imgbb">
+              imgbb
+            </a>
+          </li>
+        </Typography>
+        <Typography variant="body1" color="textPrimary" align="left">
+          <li>
+            Images hosted on{" "}
+            <a href="https://cloudinary.com//" title="cloudinary">
+              Cloudinary
             </a>
           </li>
         </Typography>
@@ -202,6 +214,17 @@ const LoginRegister = () => {
         square
       >
         <div className={classes.paper}>
+          <img
+            src="https://i.ibb.co/n8sC2Zc/image.png"
+            alt="logo"
+            border="0"
+            width="300px"
+            style={{
+              borderRadius: "2%",
+              overflow: "hidden",
+              marginBottom: "20px",
+            }}
+          />
           <Button
             className={classes.login}
             variant="outlined"

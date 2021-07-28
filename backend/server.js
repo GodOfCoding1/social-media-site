@@ -50,17 +50,17 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.status(500).send({ message: "error" });
 });
-// app.use("*", function(req, res, next) {
-//     console.log("the request gotten from req", req.baseUrl);
-//     if (!req.baseUrl.includes("/users/") &&
-//         !req.baseUrl.includes("/posts/") &&
-//         !req.baseUrl.includes("/payment/")
-//     ) {
-//         res.sendFile(path.join(__dirname, "build", "index.html"));
-//     } else {
-//         next();
-//     }
-// });
+app.use("*", function(req, res, next) {
+    console.log("the request gotten from req", req.baseUrl);
+    if (!req.baseUrl.includes("/users/") &&
+        !req.baseUrl.includes("/posts/") &&
+        !req.baseUrl.includes("/payment/")
+    ) {
+        res.sendFile(path.join(__dirname, "build", "index.html"));
+    } else {
+        next();
+    }
+});
 //use verification
 app.use("/", JWT.JWTAuthMiddleware);
 //load router

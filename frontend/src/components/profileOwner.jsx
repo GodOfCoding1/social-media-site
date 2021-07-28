@@ -6,6 +6,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import { DialogContent } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
+import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
+import FriendCard from "./friendCard";
 const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
@@ -14,6 +18,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(151, 52, 175)",
     color: "white",
     "&:hover": { backgroundColor: "rgb(137, 47, 158)" },
+  },
+
+  actionBar: {
+    padding: "20px",
+    margin: "20px",
+    marginBottom: 0,
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+    },
   },
   sectionDesktop: {
     display: "none",
@@ -29,16 +44,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProfileOwner = ({ token }) => {
+const ProfileOwner = ({ token, viewer }) => {
   const classes = useStyles();
   const [allPosts, setAllPosts] = useState([]);
   const [user, setUser] = useState({});
   const [file, setFile] = useState(null);
   const [image, setImage] = useState(null);
+  const [friends, setFriends] = useState([]);
+
+  //for dialog box
+  const [profilePicture, setProfilePicture] = React.useState(false);
+  const [showFriendList, setShowFriendList] = React.useState(false);
 
   //for progress bar
   const [showBar, setShowBar] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
+
   const options = {
     onUploadProgress: (progressEvent) => {
       const { loaded, total } = progressEvent;
@@ -87,7 +108,7 @@ const ProfileOwner = ({ token }) => {
     }
     setShowBar(true);
     axios
-      .post(`http://localhost:5000/users/uploadDP`, postData, {
+      .post(`http://${window.location.host}/users/uploadDP`, postData, {
         onUploadProgress: (progressEvent) => {
           const { loaded, total } = progressEvent;
           let percent = Math.floor((loaded * 100) / total);
@@ -118,7 +139,7 @@ const ProfileOwner = ({ token }) => {
   useEffect(() => {
     //get user
     axios
-      .get(`http://localhost:5000/users/single_user`, {
+      .get(`http://${window.location.host}/users/single_user`, {
         headers: {
           token: token,
         },
@@ -135,7 +156,7 @@ const ProfileOwner = ({ token }) => {
       });
     //get all posts
     axios
-      .get(`http://localhost:5000/posts/allposts/:id`, {
+      .get(`http://${window.location.host}/posts/allposts/:id`, {
         headers: {
           token: token,
         },
@@ -159,7 +180,7 @@ const ProfileOwner = ({ token }) => {
       )
     )
       axios
-        .get(`http://localhost:5000/posts/deletePost/${id}`, {
+        .get(`http://${window.location.host}/posts/deletePost/${id}`, {
           headers: {
             token: token,
           },
@@ -176,91 +197,216 @@ const ProfileOwner = ({ token }) => {
         });
   };
 
+  const getFriends = () => {
+    axios
+      .get(`http://${window.location.host}/users/friends`, {
+        headers: {
+          token: token,
+        },
+      })
+      .then((res) => {
+        if (res.data.message) {
+          window.alert(res.data.message);
+        }
+        if (res.data.friendsData) setFriends(res.data.friendsData);
+      })
+      .catch((err) => {
+        window.alert("some error occured please check console");
+        console.log(err);
+      });
+  };
+
   return (
     <React.Fragment>
-      {user.dp_url ? (
-        <Paper
-          style={{
-            padding: "20px",
-            margin: "20px",
-            marginBottom: 0,
+      {/* action nav bar */}
+      <Paper className={classes.actionBar}>
+        {" "}
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            setProfilePicture(true);
           }}
         >
-          <Typography>
-            <Button
-              variant="contained"
-              className={classes.activeButtons}
-              component="label"
-            >
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
-                hidden
+          Profile Picture
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            getFriends();
+            setShowFriendList(true);
+          }}
+          style={{ marginLeft: "10px" }}
+        >
+          Friends <PeopleAltOutlinedIcon />
+        </Button>
+      </Paper>
+
+      {/* set profile pic */}
+      <Dialog
+        onClose={() => {
+          setProfilePicture(false);
+        }}
+        aria-labelledby="customized-dialog-title"
+        open={profilePicture}
+      >
+        <DialogTitle
+          id="customized-dialog-title"
+          onClose={() => {
+            setProfilePicture(false);
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div> Profile Picture</div>{" "}
+            <CloseIcon
+              style={{
+                cursor: "pointer",
+                "&:hover": {
+                  background: "#efefef",
+                },
+              }}
+              onClick={() => {
+                setProfilePicture(false);
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent dividers>
+          {user.dp_url ? (
+            <React.Fragment>
+              <Typography>
+                <Button
+                  variant="contained"
+                  className={classes.activeButtons}
+                  component="label"
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    hidden
+                  />
+                  Change Profile Picture
+                </Button>
+              </Typography>
+              {file && (
+                <React.Fragment>
+                  <Typography style={{ marginTop: "20px" }}>
+                    <img alt="uploaded" id="target" src={image} width="100%" />
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    // disabled={true}
+                    style={{ marginTop: "20px" }}
+                    className={classes.activeButtons}
+                    onClick={axiosPostProfile}
+                  >
+                    Change
+                  </Button>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Typography>
+                <Button
+                  variant="contained"
+                  className={classes.activeButtons}
+                  component="label"
+                >
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    hidden
+                  />{" "}
+                  Set Profile Picture
+                </Button>
+              </Typography>
+              {file && (
+                <React.Fragment>
+                  <Typography style={{ marginTop: "20px" }}>
+                    <img alt="uploaded" id="target" src={image} width="100%" />
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    // disabled={true}
+                    style={{ marginTop: "20px" }}
+                    className={classes.activeButtons}
+                    onClick={axiosPostProfile}
+                  >
+                    Set
+                  </Button>
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* friends list */}
+      <Dialog
+        onClose={() => {
+          setShowFriendList(false);
+        }}
+        aria-labelledby="customized-dialog-title"
+        open={showFriendList}
+      >
+        <DialogTitle
+          id="customized-dialog-title"
+          onClose={() => {
+            setShowFriendList(false);
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div> Friends</div>{" "}
+            <CloseIcon
+              style={{
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setShowFriendList(false);
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent dividers>
+          {friends ? (
+            friends.map((friend, index) => (
+              <FriendCard
+                kry={index}
+                updateProps={getFriends}
+                token={token}
+                viewer={viewer}
+                friend={friend}
               />
-              Change Profile Picture
-            </Button>
-          </Typography>
-          {file && (
-            <React.Fragment>
-              <Typography style={{ marginTop: "20px" }}>
-                <img alt="uploaded" id="target" src={image} width="100%" />
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                // disabled={true}
-                style={{ marginTop: "20px" }}
-                className={classes.activeButtons}
-                onClick={axiosPostProfile}
-              >
-                Change
-              </Button>
-            </React.Fragment>
+            ))
+          ) : (
+            <Typography variant="body1" align="left">
+              You dont have any friends
+            </Typography>
           )}
-        </Paper>
-      ) : (
-        <Paper
-          style={{
-            padding: "20px",
-            margin: "20px",
-            marginBottom: 0,
-          }}
-        >
-          <Typography>
-            <Button
-              variant="contained"
-              className={classes.activeButtons}
-              component="label"
-            >
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileUpload}
-                hidden
-              />{" "}
-              Set Profile Picture
-            </Button>
-          </Typography>
-          {file && (
-            <React.Fragment>
-              <Typography style={{ marginTop: "20px" }}>
-                <img alt="uploaded" id="target" src={image} width="100%" />
-              </Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                // disabled={true}
-                style={{ marginTop: "20px" }}
-                className={classes.activeButtons}
-                onClick={axiosPostProfile}
-              >
-                Set
-              </Button>
-            </React.Fragment>
-          )}
-        </Paper>
-      )}
+        </DialogContent>
+      </Dialog>
+
+      {/* coins in account */}
       <Paper
         style={{
           padding: "20px",
@@ -285,6 +431,7 @@ const ProfileOwner = ({ token }) => {
           {user.coins}
         </Typography>
       </Paper>
+      {/* posts */}
       <Paper
         style={{
           padding: "20px",
@@ -294,7 +441,7 @@ const ProfileOwner = ({ token }) => {
         <Typography variant="h5" align="left">
           <b>Your Posts</b>
         </Typography>
-        {allPosts.length ? (
+        {allPosts?.length ? (
           allPosts.map((post, index) =>
             post.type === "image" ? (
               <Paper
@@ -436,6 +583,7 @@ const ProfileOwner = ({ token }) => {
           </Typography>
         )}
       </Paper>
+
       <Dialog
         onClose={() => {
           setShowBar(false);

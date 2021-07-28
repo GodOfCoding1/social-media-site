@@ -18,7 +18,7 @@ const UserPage = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://localhost:5000/users/single_user`, {
+        .get(`http://${window.location.host}/users/single_user`, {
           headers: {
             token: token,
           },
@@ -39,7 +39,7 @@ const UserPage = () => {
   const updateProps = () => {
     if (token) {
       axios
-        .get(`http://localhost:5000/users/single_user`, {
+        .get(`http://${window.location.host}users/single_user`, {
           headers: {
             token: token,
           },
@@ -70,7 +70,7 @@ const UserPage = () => {
           ) : location === "post" ? (
             <AddPosts token={token} />
           ) : location === "profile" ? (
-            <ProfileOwner token={token} />
+            <ProfileOwner token={token} viewer={user} />
           ) : location === "home" ? (
             <Home token={token} viewer={user} />
           ) : (

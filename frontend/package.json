@@ -11,6 +11,7 @@
         "@testing-library/user-event": "^12.8.3",
         "axios": "^0.21.1",
         "csv": "^5.5.0",
+        "dotenv": "^8.2.0",
         "email-validator": "^2.0.4",
         "razorpay": "^2.0.6",
         "react": "^17.0.2",

@@ -36,7 +36,7 @@ const UserCard = ({ user, id, token, viewer, updateProps }) => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost:5000/users/single_user_with_id/${id}`, {
+        .get(`http://${window.location.host}/users/single_user_with_id/${id}`, {
           headers: {
             token: token,
           },
@@ -55,7 +55,7 @@ const UserCard = ({ user, id, token, viewer, updateProps }) => {
 
   const sendRequest = (id_receiver) => {
     axios
-      .get(`http://localhost:5000/users/sendRequest/${id_receiver}`, {
+      .get(`http://${window.location.host}/users/sendRequest/${id_receiver}`, {
         headers: {
           token: token,
         },
@@ -72,11 +72,14 @@ const UserCard = ({ user, id, token, viewer, updateProps }) => {
 
   const acceptRequest = (id_receiver) => {
     axios
-      .get(`http://localhost:5000/users/acceptRequest/${id_receiver}`, {
-        headers: {
-          token: token,
-        },
-      })
+      .get(
+        `http://${window.location.host}/users/acceptRequest/${id_receiver}`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      )
       .then((res) => {
         if (res.data.message) window.alert(res.data.message);
         updateProps();
@@ -89,11 +92,14 @@ const UserCard = ({ user, id, token, viewer, updateProps }) => {
 
   const rejectRequest = (id_receiver) => {
     axios
-      .get(`http://localhost:5000/users/rejectRequest/${id_receiver}`, {
-        headers: {
-          token: token,
-        },
-      })
+      .get(
+        `http://${window.location.host}/users/rejectRequest/${id_receiver}`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      )
       .then((res) => {
         if (res.data.message) window.alert(res.data.message);
         updateProps();

@@ -144,7 +144,7 @@ const AddPosts = ({ token }) => {
 
     setShowBar(true);
     axios
-      .post(`http://localhost:5000/posts/addPost`, postData, {
+      .post(`http://${window.location.host}posts/addPost`, postData, {
         onUploadProgress: (progressEvent) => {
           const { loaded, total } = progressEvent;
           let percent = Math.floor((loaded * 100) / total);
@@ -171,17 +171,6 @@ const AddPosts = ({ token }) => {
         console.log(err);
       });
   };
-
-  // const sendUploadedFile = (file) => {
-  //   const reader = new FileReader();
-  //   reader.onload = (evt) => {
-  //     /* get binary string */
-  //     const bstr = evt.target.result;
-  //     setFile(bstr);
-  //   };
-
-  //   reader.readAsBinaryString(file);
-  // };
 
   const handleFileUpload = (e) => {
     if (e.target.files[0]) {

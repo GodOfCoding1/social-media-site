@@ -50,7 +50,7 @@ const Login = () => {
   const postLogin = () => {
     if (email.length && password.length) {
       axios
-        .post(`http://localhost:5000/users/login`, {
+        .post(`http://${window.location.host}/users/login`, {
           email: email,
           password: password,
         })
@@ -70,10 +70,14 @@ const Login = () => {
             }
 
             if (data.user.isAdmin) {
-              window.location.replace(`http://localhost:3000/dashboard`);
+              window.location.replace(
+                `http://${window.location.host}/dashboard`
+              );
             }
             if (data.user) {
-              window.location.replace(`http://localhost:3000/userPage`);
+              window.location.replace(
+                `http://${window.location.host}/userPage`
+              );
             }
           }
         })

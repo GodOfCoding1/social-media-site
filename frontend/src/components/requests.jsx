@@ -40,7 +40,7 @@ const Requests = ({ token, viewer, updateProps }) => {
     console.log(search !== "");
     if (search !== "")
       axios
-        .get(`http://localhost:5000/users/search/${search}`, {
+        .get(`http://${window.location.host}/users/search/${search}`, {
           headers: {
             token: token,
           },
@@ -59,7 +59,7 @@ const Requests = ({ token, viewer, updateProps }) => {
 
   return (
     <React.Fragment>
-      {viewer.friend_request.length ? (
+      {viewer.friend_request?.length ? (
         <Paper
           style={{
             padding: "20px",
@@ -118,7 +118,7 @@ const Requests = ({ token, viewer, updateProps }) => {
           placeholder="Search for users..."
         />
       </Paper>
-      {searchResults.length ? (
+      {searchResults?.length ? (
         searchResults.map((user, index) => (
           <UserCard token={token} key={index} user={user} viewer={viewer} />
         ))
