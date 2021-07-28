@@ -75,7 +75,7 @@ const Register = () => {
     ) {
       axios
         .post(
-          `http://${window.location.host}users/register`,
+          `http://${window.location.host}/users/register`,
           {
             name: name,
             email: email,
