@@ -8,9 +8,7 @@
 # testing
 /coverage
 local_temp_storage
-*.env
-./config.env
-config.env
+
 # production
 #/build
 

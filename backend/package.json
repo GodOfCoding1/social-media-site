@@ -1,11 +1,11 @@
 {
-    "name": "login_register",
+    "name": "coinface",
     "version": "1.0.0",
-    "description": "a simple login_register app",
-    "main": "server.js",
+    "description": "a social media clone app",
+    "main": "app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon server.js"
+        "start": "node app.js"
     },
     "repository": {
         "type": "git",
