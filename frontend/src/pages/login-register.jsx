@@ -50,7 +50,7 @@ const About = () => {
             are given.
           </li>
           <li>Like posts</li>
-          <li>Share posts</li>
+          <li>Likes on post award the owner coins</li> <li>Share posts</li>
         </Typography>
       </Paper>
       <Paper

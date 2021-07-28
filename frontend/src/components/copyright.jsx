@@ -5,7 +5,7 @@ export function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href={`http://${window.location.host}`}>
+      <Link color="inherit" href={`https://${window.location.host}`}>
         CoinFace
       </Link>{" "}
       {new Date().getFullYear()}

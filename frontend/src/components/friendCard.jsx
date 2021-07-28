@@ -15,7 +15,7 @@ const FriendCard = ({ friend, token, updateProps, viewer }) => {
 
   const likePost = (id) => {
     axios
-      .get(`http://${window.location.host}/posts/likePost/${id}`, {
+      .get(`https://${window.location.host}/posts/likePost/${id}`, {
         headers: {
           token: token,
         },
@@ -36,7 +36,7 @@ const FriendCard = ({ friend, token, updateProps, viewer }) => {
     return new Promise(async (resolve) => {
       try {
         const res = await axios.get(
-          `http://${window.location.host}/posts/unlockPost/${id}`,
+          `https://${window.location.host}/posts/unlockPost/${id}`,
           {
             headers: {
               token: token,
@@ -58,7 +58,7 @@ const FriendCard = ({ friend, token, updateProps, viewer }) => {
 
   const getPosts = (id) => {
     axios
-      .get(`http://${window.location.host}/posts/allposts/${id}`, {
+      .get(`https://${window.location.host}/posts/allposts/${id}`, {
         headers: {
           token: token,
         },
@@ -79,7 +79,7 @@ const FriendCard = ({ friend, token, updateProps, viewer }) => {
   const removeFriend = (id) => {
     if (window.confirm("Are you sure you want to unfriend?"))
       axios
-        .get(`http://${window.location.host}/users/removeFriend/${id}`, {
+        .get(`https://${window.location.host}/users/removeFriend/${id}`, {
           headers: {
             token: token,
           },

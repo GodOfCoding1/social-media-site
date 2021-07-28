@@ -18,7 +18,7 @@ const UserPage = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://${window.location.host}/users/single_user`, {
+        .get(`https://${window.location.host}/users/single_user`, {
           headers: {
             token: token,
           },
@@ -32,14 +32,14 @@ const UserPage = () => {
         });
     } else {
       window.alert("You are not logged in");
-      window.location.replace(`http://${window.location.host}/login`);
+      window.location.replace(`https://${window.location.host}/login`);
     }
   }, [token]);
 
   const updateProps = () => {
     if (token) {
       axios
-        .get(`http://${window.location.host}users/single_user`, {
+        .get(`https://${window.location.host}/users/single_user`, {
           headers: {
             token: token,
           },

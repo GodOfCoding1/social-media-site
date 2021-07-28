@@ -50,7 +50,7 @@ const Login = () => {
   const postLogin = () => {
     if (email.length && password.length) {
       axios
-        .post(`http://${window.location.host}/users/login`, {
+        .post(`https://${process.env.REACT_APP_HOST}/users/login`, {
           email: email,
           password: password,
         })
@@ -71,12 +71,12 @@ const Login = () => {
 
             if (data.user.isAdmin) {
               window.location.replace(
-                `http://${window.location.host}/dashboard`
+                `https://${window.location.host}/dashboard`
               );
             }
             if (data.user) {
               window.location.replace(
-                `http://${window.location.host}/userPage`
+                `https://${window.location.host}/userPage`
               );
             }
           }

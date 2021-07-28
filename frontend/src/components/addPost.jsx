@@ -144,7 +144,7 @@ const AddPosts = ({ token }) => {
 
     setShowBar(true);
     axios
-      .post(`http://${window.location.host}posts/addPost`, postData, {
+      .post(`https://${window.location.host}/posts/addPost`, postData, {
         onUploadProgress: (progressEvent) => {
           const { loaded, total } = progressEvent;
           let percent = Math.floor((loaded * 100) / total);

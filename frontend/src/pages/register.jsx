@@ -75,7 +75,7 @@ const Register = () => {
     ) {
       axios
         .post(
-          `http://${window.location.host}/users/register`,
+          `https://${process.env.REACT_APP_HOST}/users/register`,
           {
             name: name,
             email: email,
@@ -87,6 +87,7 @@ const Register = () => {
         .then((res) => {
           window.alert("Registered sucessfully");
           window.alert(res.data.message);
+          window.alert("Dont forget to check spam mails");
 
           if (res.data.status === 400) {
             if (res.data.message) {
@@ -94,7 +95,7 @@ const Register = () => {
               window.location.reload();
             }
           } else {
-            window.location.replace(`http://${window.location.host}/login`);
+            window.location.replace(`https://${window.location.host}/login`);
           }
         })
         .catch((err) => {

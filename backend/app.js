@@ -51,7 +51,6 @@ app.use(function(err, req, res, next) {
     res.status(500).send({ message: "error" });
 });
 app.use("*", function(req, res, next) {
-    console.log("the request gotten from req", req.baseUrl);
     if (!req.baseUrl.includes("/users/") && !req.baseUrl.includes("/posts/")) {
         res.sendFile(path.join(__dirname, "build", "index.html"));
     } else {

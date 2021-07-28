@@ -141,7 +141,7 @@ export default function NavBarUser({ user, active, setLocation }) {
         onClick={() => {
           localStorage.removeItem("token");
           sessionStorage.removeItem("token");
-          window.location.replace(`http://${window.location.host}`);
+          window.location.replace(`https://${window.location.host}`);
         }}
       >
         Logout
@@ -214,7 +214,7 @@ export default function NavBarUser({ user, active, setLocation }) {
         onClick={() => {
           localStorage.removeItem("token");
           sessionStorage.removeItem("token");
-          window.location.replace(`http://${window.location.host}`);
+          window.location.replace(`https://${window.location.host}`);
         }}
       >
         <Button

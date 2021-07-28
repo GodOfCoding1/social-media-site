@@ -20,7 +20,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get(`http://${window.location.host}/users/single_user`, {
+        .get(`https://${window.location.host}/users/single_user`, {
           headers: {
             token: token,
           },
@@ -34,7 +34,7 @@ const Dashboard = () => {
         });
 
       axios
-        .get(`http://${window.location.host}/users/all_users`, {
+        .get(`https://${window.location.host}/users/all_users`, {
           headers: {
             token: token,
           },

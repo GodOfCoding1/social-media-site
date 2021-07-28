@@ -108,7 +108,7 @@ const ProfileOwner = ({ token, viewer }) => {
     }
     setShowBar(true);
     axios
-      .post(`http://${window.location.host}/users/uploadDP`, postData, {
+      .post(`https://${window.location.host}/users/uploadDP`, postData, {
         onUploadProgress: (progressEvent) => {
           const { loaded, total } = progressEvent;
           let percent = Math.floor((loaded * 100) / total);
@@ -139,7 +139,7 @@ const ProfileOwner = ({ token, viewer }) => {
   useEffect(() => {
     //get user
     axios
-      .get(`http://${window.location.host}/users/single_user`, {
+      .get(`https://${window.location.host}/users/single_user`, {
         headers: {
           token: token,
         },
@@ -156,7 +156,7 @@ const ProfileOwner = ({ token, viewer }) => {
       });
     //get all posts
     axios
-      .get(`http://${window.location.host}/posts/allposts/:id`, {
+      .get(`https://${window.location.host}/posts/allposts/:id`, {
         headers: {
           token: token,
         },
@@ -180,7 +180,7 @@ const ProfileOwner = ({ token, viewer }) => {
       )
     )
       axios
-        .get(`http://${window.location.host}/posts/deletePost/${id}`, {
+        .get(`https://${window.location.host}/posts/deletePost/${id}`, {
           headers: {
             token: token,
           },
@@ -199,7 +199,7 @@ const ProfileOwner = ({ token, viewer }) => {
 
   const getFriends = () => {
     axios
-      .get(`http://${window.location.host}/users/friends`, {
+      .get(`https://${window.location.host}/users/friends`, {
         headers: {
           token: token,
         },

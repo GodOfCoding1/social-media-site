@@ -65,7 +65,7 @@ route.post("/register", async(req, res) => {
                 from: process.env.SENDER_EMAIL, // sender address
                 to: data.email, // list of receivers
                 subject: "Verify email", // Subject line
-                html: `<p>An account for ${process.env.HOST} was created using this email. <a href="http://${process.env.HOST}/verifyUser/${token}" >Click here </a>to verify the account.</p> <p>If the account was not created by you then you can ignore this email</p>`, // html body
+                html: `<p>An account for ${process.env.HOST} was created using this email. <a href="https://${process.env.HOST}/verifyUser/${token}" >Click here </a>to verify the account.</p> <p>If the account was not created by you then you can ignore this email</p>. If the link is not clickable use this https://${process.env.HOST}/verifyUser/${token}`, // html body
             };
             await transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
@@ -129,7 +129,7 @@ route.post("/login", async(req, res) => {
                 from: process.env.SENDER_EMAIL, // sender address
                 to: user.email, // list of receivers
                 subject: "Verify email", // Subject line
-                html: `<p>An account for ${process.env.HOST} was created using this email. <a href="http://${process.env.HOST}/verifyUser/${token}" >Click here </a>to verify the account.</p> <p>If the account was not created by you then you can ignore this email</p>`, // html body
+                html: `<p>An account for ${process.env.HOST} was created using this email. <a href="https://${process.env.HOST}/verifyUser/${token}" >Click here </a>to verify the account.</p> <p>If the account was not created by you then you can ignore this email. If the link is not clickable use this https://${process.env.HOST}/verifyUser/${token}</p>`, // html body
             };
             await transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
@@ -355,7 +355,7 @@ route.put("/forgotPassword/:email", async(req, res) => {
                 from: process.env.SENDER_EMAIL, // sender address
                 to: req.params.email, // list of receivers
                 subject: "Password reset", // Subject line
-                html: `<a href="http://${process.env.HOST}/resetPassword/${token}" >Click here to reset password</a>`, // html body
+                html: `<a href="https://${process.env.HOST}/resetPassword/${token}" >Click here to reset password. OR copy this link https://${process.env.HOST}/resetPassword/${token}</a>`, // html body
             };
             await transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
@@ -401,7 +401,7 @@ route.get("/mailResetPassword", async(req, res) => {
                         to: data.email, // list of receivers
                         subject: "Password reset", // Subject line
 
-                        html: `<a href="http://${process.env.HOST}/resetPassword/${token}" >Click here to reset password</a>`, // html body
+                        html: `<a href="https://${process.env.HOST}/resetPassword/${token}" >Click here to reset password. or copy this link https://${process.env.HOST}/resetPassword/${token}</a>`, // html body
                     };
                     await transporter.sendMail(mailOptions, (err, info) => {
                         if (err) {

@@ -25,7 +25,7 @@ const ResetPassword = ({
     } else {
       axios
         .put(
-          `http://${window.location.host}/users/changePassword`,
+          `https://${window.location.host}/users/changePassword`,
           {
             password: password,
           },
@@ -41,7 +41,7 @@ const ResetPassword = ({
             window.alert(data.message);
           } else {
             window.alert(data.message);
-            window.location.replace(`http://${window.location.host}/login`);
+            window.location.replace(`https://${window.location.host}/login`);
           }
         })
         .catch((err) => {

@@ -40,7 +40,7 @@ const Requests = ({ token, viewer, updateProps }) => {
     console.log(search !== "");
     if (search !== "")
       axios
-        .get(`http://${window.location.host}/users/search/${search}`, {
+        .get(`https://${window.location.host}/users/search/${search}`, {
           headers: {
             token: token,
           },

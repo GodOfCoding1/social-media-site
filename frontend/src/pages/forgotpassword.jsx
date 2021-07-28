@@ -17,14 +17,14 @@ const ForgotPassword = () => {
 
   const findAndSendMail = () => {
     axios
-      .put(`http://${window.location.host}/users/forgotPassword/${Email}`)
+      .put(`https://${window.location.host}/users/forgotPassword/${Email}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {
           window.alert(data.message);
         } else {
           window.alert(data.message);
-          window.location.replace(`http://${window.location.host}/login`);
+          window.location.replace(`https://${window.location.host}/login`);
         }
       })
       .catch((err) => {

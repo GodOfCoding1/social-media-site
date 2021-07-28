@@ -37,14 +37,14 @@ const VerifyUser = ({
   }, []);
   const verifyuser = () => {
     axios
-      .get(`http://${window.location.host}/users/verifyUser/${token}`)
+      .get(`https://${window.location.host}/users/verifyUser/${token}`)
       .then((res) => res.data)
       .then((data) => {
         if (data.status === 400) {
           window.alert(data.message);
         } else {
           window.alert(data.message);
-          window.location.replace(`http://${window.location.host}/login`);
+          window.location.replace(`https://${window.location.host}/login`);
         }
       })
       .catch((err) => {

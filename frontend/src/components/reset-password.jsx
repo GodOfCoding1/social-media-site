@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 const ResetPassword = ({ token }) => {
   const goToResetPage = () => {
     window.location.replace(
-      `http://${window.location.host}/resetPassword/${token}`
+      `https://${window.location.host}/resetPassword/${token}`
     );
   };
 

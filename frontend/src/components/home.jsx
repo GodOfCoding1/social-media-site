@@ -10,7 +10,7 @@ const Home = ({ token, viewer }) => {
 
   const fetchFeed = () => {
     axios
-      .get(`http://${window.location.host}/posts/getFeed`, {
+      .get(`https://${window.location.host}/posts/getFeed`, {
         headers: {
           token: token,
         },
@@ -32,7 +32,7 @@ const Home = ({ token, viewer }) => {
 
   const likePost = (id) => {
     axios
-      .get(`http://${window.location.host}/posts/likePost/${id}`, {
+      .get(`https://${window.location.host}/posts/likePost/${id}`, {
         headers: {
           token: token,
         },
@@ -53,7 +53,7 @@ const Home = ({ token, viewer }) => {
     return new Promise(async (resolve) => {
       try {
         const res = await axios.get(
-          `http://${window.location.host}/posts/unlockPost/${id}`,
+          `https://${window.location.host}/posts/unlockPost/${id}`,
           {
             headers: {
               token: token,

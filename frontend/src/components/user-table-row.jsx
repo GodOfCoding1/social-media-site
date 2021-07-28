@@ -43,7 +43,7 @@ const UserRow = ({ user, token }) => {
 
         axios
           .put(
-            `http://${window.location.host}/users/updateRole/${id}`,
+            `https://${window.location.host}/users/updateRole/${id}`,
             updated_user,
             {
               headers: { token: token, "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ const UserRow = ({ user, token }) => {
 
       axios
         .put(
-          `http://${window.location.host}/users/update/${id}`,
+          `https://${window.location.host}/users/update/${id}`,
           updated_user,
           {
             headers: {
@@ -99,7 +99,7 @@ const UserRow = ({ user, token }) => {
     let result = window.confirm("Want to delete?");
     if (result) {
       axios
-        .delete(`http://${window.location.host}/users/${id}`, {
+        .delete(`https://${window.location.host}/users/${id}`, {
           headers: {
             token: token,
           },
