@@ -1,4 +1,6 @@
 # social-media-site
-a simple social media site that allows posts, post sharing, and post rating
+- A social media clone that has all the common features along with a twist.
+- Complete with it's own database and backend api
+
 
 ## Live Demo : https://coin-face.herokuapp.com/
